@@ -1,0 +1,60 @@
+#projeto
+
+import pygame
+import pygame
+from pygame.locals import *
+from sys import exit
+from random import randint
+
+pygame.init()
+
+largura, altura = 650, 600
+#criar duas variaveis para controlar o movimento da forma (posição do objeto)
+x = 310
+y = 310
+
+x_branco = randint(40, 610)
+y_branco = randint(50, 550)
+
+fonte = pygame.font.SysFont('Adobe Gothic Std', 65, False, True) #fonte, tamanho, negrito, italico
+multas = 0
+
+tela = pygame.display.set_mode((largura, altura))
+pygame.display.set_caption("MELHOR JOGO DE TODOS OS TEMPOS!!")
+
+relogio = pygame.time.Clock()
+
+while True:
+    relogio.tick(600) #controlar a velocidade do jogo
+
+    tela.fill((0,0,0)) #preencher, a cada iteração, a tela com a cor de fundo
+
+    mensagem = f"Multas: {multas}"
+    texto_formatado = fonte.render(mensagem, False, (255,255,255)) #serrilhamento do texto (2o parametro)
+
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            exit()
+
+        if pygame.key.get_pressed()[K_a]:
+            x = x - 20 
+        if pygame.key.get_pressed()[K_d]:
+            x = x + 20
+        if pygame.key.get_pressed()[K_s]:
+            y = y + 20
+        if pygame.key.get_pressed()[K_w]:
+            y = y - 20
+
+    #tupla (RGB) -> 0 a 255 #ADICIONAR FORMAs:
+    ret_lilas = pygame.draw.rect(tela, (200, 150,220), (x,y,40,50)) #primeiro parâmetro = onde vai ser desenhado, segundo = tupla das cores, terceiro: tupla com a posição x, y, largura e altura da forma
+    ret_branco = pygame.draw.rect(tela, (255, 255,255), (x_branco, y_branco, 40, 50))
+
+    if ret_lilas.colliderect(ret_branco): #quando houver uma colisão
+        x_branco = randint(40, 610)
+        y_branco = randint(50, 550)
+        multas = multas + 1
+
+    tela.blit(texto_formatado, (40,50)) #tupla da posição do texto
+
+    pygame.display.update()
